@@ -52,7 +52,11 @@ void PrintGame(PlayField& f)
 {
 	cout << " ";
 	for(int i=0; i<f.cols; i++) {
-		cout << " " << i+1;
+		if(i<9) {
+			cout << " " << i+1;
+		} else {
+			cout << i+1;
+		}
 	}
 	cout << endl;
   for (int i = 0; i < f.rows; i++)
@@ -72,20 +76,30 @@ void PrintGame(PlayField& f)
 
 bool win(PlayField& f) 
 {
-  int r, c = 0;
-  while(r < f.rows)
-  {
-    while(c < f.cols)
-    {
-      if (f.field[r][c] == vilagos)
-      {
-        return false;
-      }
-			c++;
-    }
-		r++;
-  }
+	int row = 0;
+	int col = 0;
+	while(row < f.rows) {
+		while(col < f.cols) {
+			if(f.field[row][col] == vilagos) return false;
+			col++;
+		}
+		row++;
+	}
 	return true;
+	/*
+	int darkcount = 0;
+	for(int i=0; i<f.rows; i++) {
+		for(int j=0; j<f.cols; j++) {
+			if(f.field[i][j] == sotet) {
+				darkcount++;
+			}
+		}
+	}
+	if(darkcount == (f.rows*f.cols)) {
+		return true;
+	}
+	return false;
+	*/
 }
 
 bool ValidInput(PlayField& f ,int row, int col) {
@@ -157,9 +171,9 @@ void makestep(PlayField& f, int row, int col)
 int main() 
 {
 	srand(time(NULL));
-  PlayField game;
+	PlayField game;
 	InitGame(game);
-  PrintGame(game);
+	PrintGame(game);
 	while(!win(game)) {
 		cout << game.stepcount << ". lepes!";
 		int row;
@@ -171,5 +185,6 @@ int main()
 		makestep(game, row, col);
 		PrintGame(game);
 	}
+	cout << "Nyertel!\n";
 	return 0;
 }
