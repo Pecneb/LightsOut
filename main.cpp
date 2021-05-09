@@ -76,30 +76,12 @@ void PrintGame(PlayField& f)
 
 bool win(PlayField& f) 
 {
-	int row = 0;
-	int col = 0;
-	while(row < f.rows) {
-		while(col < f.cols) {
-			if(f.field[row][col] == vilagos) return false;
-			col++;
-		}
-		row++;
-	}
-	return true;
-	/*
-	int darkcount = 0;
 	for(int i=0; i<f.rows; i++) {
 		for(int j=0; j<f.cols; j++) {
-			if(f.field[i][j] == sotet) {
-				darkcount++;
-			}
+			if(f.field[i][j] != sotet) return false;
 		}
 	}
-	if(darkcount == (f.rows*f.cols)) {
-		return true;
-	}
-	return false;
-	*/
+	return true;
 }
 
 bool ValidInput(PlayField& f ,int row, int col) {
@@ -125,64 +107,68 @@ void makestep(PlayField& f, int row, int col)
 		if(col == 0) {
 			Colorchange(f.field[row+1][col]);
 			Colorchange(f.field[row][col+1]); 
+			Colorchange(f.field[row][col]);
 		}
-		else if(col == f.cols) {
-      Colorchange(f.field[row][col-1]);
-      Colorchange(f.field[row+1][col]);
+		else if(col == f.cols-1) {
+			Colorchange(f.field[row][col-1]);
+    		Colorchange(f.field[row+1][col]);
+			Colorchange(f.field[row][col]);
 		} else {
 			Colorchange(f.field[row][col-1]);
 			Colorchange(f.field[row][col+1]);
 			Colorchange(f.field[row+1][col]);
+			Colorchange(f.field[row][col]);
 		}
-	}
-  else if(row == f.rows)
-  {
-    if(col == 0)
-    {
+	} else if(row == f.rows-1) {
+    	if(col == 0) {
 			Colorchange(f.field[row-1][col]);
-			Colorchange(f.field[row][col+1]); 
-		}
-		else if(col == f.cols)
-    {
-      Colorchange(f.field[row][col-1]);
-      Colorchange(f.field[row-1][col]);
+			Colorchange(f.field[row][col+1]);
+			Colorchange(f.field[row][col]);
+		} else if(col == f.cols-1) {
+    		Colorchange(f.field[row][col-1]);
+    		Colorchange(f.field[row-1][col]);
+			Colorchange(f.field[row][col]);
 		} else {
 			Colorchange(f.field[row][col-1]);
 			Colorchange(f.field[row][col+1]);
 			Colorchange(f.field[row-1][col]);
+			Colorchange(f.field[row][col]);
 		}
-  } else if(col == 0) {
+  	} else if(col == 0) {
 		Colorchange(f.field[row][col+1]);
 		Colorchange(f.field[row+1][col]);
 		Colorchange(f.field[row-1][col]);
-	} else if(col == f.cols) {
+		Colorchange(f.field[row][col]);
+	} else if(col == f.cols-1) {
 		Colorchange(f.field[row][col-1]);
 		Colorchange(f.field[row+1][col]);
 		Colorchange(f.field[row-1][col]);
+		Colorchange(f.field[row][col]);
 	} else {
 		Colorchange(f.field[row][col+1]);
 		Colorchange(f.field[row][col-1]);
 		Colorchange(f.field[row+1][col]);
 		Colorchange(f.field[row-1][col]);
+		Colorchange(f.field[row][col]);
 	}
 	f.stepcount++;
 }
 
-int main() 
+int main()
 {
 	srand(time(NULL));
 	PlayField game;
 	InitGame(game);
 	PrintGame(game);
 	while(!win(game)) {
-		cout << game.stepcount << ". lepes!";
+		cout << game.stepcount+1 << ". lepes!\n";
 		int row;
 		int col;
 		do {
 			cout << "Row: "; cin >> row;
 			cout << "Col: "; cin >> col;
 		} while(!ValidInput(game, row, col));
-		makestep(game, row, col);
+		makestep(game, row-1, col-1);
 		PrintGame(game);
 	}
 	cout << "Nyertel!\n";
